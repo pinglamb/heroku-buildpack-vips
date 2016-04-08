@@ -31,7 +31,7 @@ mkdir -p $APP_VENDOR_DIR
 
 echo "Downloading libvips ..." | indent
 curl -s https://raw.githubusercontent.com/pinglamb/heroku-buildpack-vips/master/vips/f1635b8.tar.gz | tar xz -C $BUILD_VENDOR_DIR
-cp -R $BUILD_VENDOR_DIR/* $APP_VENDOR_DIR/*
+cp -R $BUILD_VENDOR_DIR/* $APP_VENDOR_DIR/
 if [ $? != 0 ]; then
   echo "Error downloading libvips and unpacking to build/app dir" | indent
   exit 1
