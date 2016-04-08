@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# Usage:
+# bin/compile BUILD_DIR CACHE_DIR ENV_DIR
+
+function indent() {
+  c='s/^/       /'
+  case $(uname) in
+    Darwin) sed -l "$c";;
+    *)      sed -u "$c";;
+  esac
+}
+
+arrow() {
+  sed -u 's/^/-----> /'
+}
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
+
+echo "Installing pre-built libvips (f1635b8) ..." | arrow
+
+cd $BUILD_DIR
+
+BUILD_VENDOR_DIR="$BUILD_DIR/vendor/vips"
+APP_VENDOR_DIR="/app/vendor/vips"
+mkdir -p $BUILD_VENDOR_DIR
+mkdir -p $APP_VENDOR_DIR
+
+echo "Downloading libvips ..." | indent
+curl -s https://raw.githubusercontent.com/pinglamb/heroku-buildpack-vips/master/vips/f1635b8.tar.gz | tar xz -C $BUILD_VENDOR_DIR
+cp -R $BUILD_VENDOR_DIR $APP_VENDOR_DIR
+if [ $? != 0 ]; then
+  echo "Error downloading libvips and unpacking to build/app dir" | indent
+  exit 1
+fi
+
+mkdir -p $BUILD_DIR/bin
+cp -r $BUILD_VENDOR_DIR/bin/* $BUILD_DIR/bin/
+
+echo "\$PKG_CONFIG_PATH:/app/vendor/vips/lib/pkgconfig" > $ENV_DIR/PKG_CONFIG_PATH
+
+mkdir $BUILD_DIR/.profile.d
+cp -n $BUILDPACK_DIR/profile.d/* $BUILD_DIR/.profile.d/
+
+echo "libvips installed" | indent

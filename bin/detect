@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Nothing to detect
+exit 0
