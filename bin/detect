@@ -1,4 +1,5 @@
 #!/bin/sh
 
 # Nothing to detect
+echo "VIPS"
 exit 0
