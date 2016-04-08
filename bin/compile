@@ -45,6 +45,4 @@ echo "\$PKG_CONFIG_PATH:/app/vendor/vips/lib/pkgconfig" > $ENV_DIR/PKG_CONFIG_PA
 mkdir $BUILD_DIR/.profile.d
 cp -n $BUILDPACK_DIR/profile.d/* $BUILD_DIR/.profile.d/
 
-./.profile.d/vips.sh
-
 echo "libvips installed" | indent
